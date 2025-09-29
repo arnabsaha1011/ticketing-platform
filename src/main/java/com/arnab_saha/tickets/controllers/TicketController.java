@@ -1,9 +1,8 @@
 package com.arnab_saha.tickets.controllers;
 
 import com.arnab_saha.tickets.domain.CreateTicketRequest;
-import com.arnab_saha.tickets.domain.dtos.CreateTicketRequestDto;
-import com.arnab_saha.tickets.domain.dtos.CreateTicketResponseDto;
-import com.arnab_saha.tickets.domain.dtos.ListTicketResponseDto;
+import com.arnab_saha.tickets.domain.UpdateTicketRequest;
+import com.arnab_saha.tickets.domain.dtos.*;
 import com.arnab_saha.tickets.domain.entities.Ticket;
 import com.arnab_saha.tickets.mappers.TicketMapper;
 import com.arnab_saha.tickets.services.TicketService;
@@ -50,5 +49,17 @@ public class TicketController {
         UUID userId = parseUserId(jwt);
         Page<Ticket> tickets = ticketService.listTicketsForCustomer(userId, pageable);
         return ResponseEntity.ok(tickets.map(ticketMapper::toListTicketResponseDto));
+    }
+
+    @PutMapping(path = "/{ticketId}")
+    public ResponseEntity<UpdateTicketResponseDto> updateTicketForCreator(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID ticketId,
+            @Valid @RequestBody UpdateTicketRequestDto updateTicketRequestDto) {
+
+        UUID creatorId = parseUserId(jwt);
+        UpdateTicketRequest updateTicketRequest = ticketMapper.fromUpdateTicketRequestDto(updateTicketRequestDto);
+        Ticket updatedTicket = ticketService.updateTicketForCustomer(creatorId, ticketId, updateTicketRequest);
+        return ResponseEntity.ok(ticketMapper.toUpdateTicketResponseDto(updatedTicket));
     }
 }
