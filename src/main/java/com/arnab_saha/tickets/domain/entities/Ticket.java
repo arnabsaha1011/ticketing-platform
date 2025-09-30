@@ -36,6 +36,7 @@ public class Ticket {
     private String description;
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    @OrderBy("createdAt DESC")
     private List<Comment> comments = new ArrayList<>();
 
     @CreatedDate

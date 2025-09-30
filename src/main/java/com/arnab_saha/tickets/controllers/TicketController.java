@@ -4,6 +4,7 @@ import com.arnab_saha.tickets.domain.CreateTicketRequest;
 import com.arnab_saha.tickets.domain.UpdateTicketRequest;
 import com.arnab_saha.tickets.domain.dtos.*;
 import com.arnab_saha.tickets.domain.entities.Ticket;
+import com.arnab_saha.tickets.exceptions.TicketNotFoundException;
 import com.arnab_saha.tickets.mappers.TicketMapper;
 import com.arnab_saha.tickets.services.TicketService;
 import jakarta.transaction.Transactional;
@@ -61,5 +62,19 @@ public class TicketController {
         UpdateTicketRequest updateTicketRequest = ticketMapper.fromUpdateTicketRequestDto(updateTicketRequestDto);
         Ticket updatedTicket = ticketService.updateTicketForCustomer(creatorId, ticketId, updateTicketRequest);
         return ResponseEntity.ok(ticketMapper.toUpdateTicketResponseDto(updatedTicket));
+    }
+
+    @GetMapping(path = "/{ticketId}")
+    public ResponseEntity<GetTicketResponseDto> getTicketForCreator(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID ticketId
+    ) {
+        UUID creatorId = parseUserId(jwt);
+        Ticket ticket = ticketService.getTicketForCustomer(creatorId, ticketId)
+                .orElseThrow(() -> new TicketNotFoundException(
+                        String.format("No ticket found for this ticket ID = '%s'", ticketId)
+                ));
+
+        return ResponseEntity.ok(ticketMapper.toGetTicketResponseDto(ticket));
     }
 }

@@ -5,6 +5,7 @@ import com.arnab_saha.tickets.domain.UpdateTicketRequest;
 import com.arnab_saha.tickets.domain.entities.Ticket;
 import com.arnab_saha.tickets.domain.entities.TicketStatusEnum;
 import com.arnab_saha.tickets.domain.entities.User;
+import com.arnab_saha.tickets.exceptions.TicketException;
 import com.arnab_saha.tickets.exceptions.TicketUpdateException;
 import com.arnab_saha.tickets.repositories.TicketRepository;
 import com.arnab_saha.tickets.repositories.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -57,5 +59,18 @@ public class TicketServiceImpl implements TicketService {
         existingTicket.setStatus(ticket.getStatus());
 
         return ticketRepository.save(existingTicket);
+    }
+
+    @Override
+    public Optional<Ticket> getTicketForCustomer(UUID creatorId, UUID ticketId) {
+        if (null == creatorId) {
+            throw new TicketException("Creator ID is required to get ticket");
+        }
+
+        if (null == ticketId) {
+            throw new TicketException("Ticket ID is required to get ticket");
+        }
+
+        return ticketRepository.findByIdAndCreatorId(ticketId, creatorId);
     }
 }

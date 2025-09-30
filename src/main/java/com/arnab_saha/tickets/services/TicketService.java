@@ -6,6 +6,7 @@ import com.arnab_saha.tickets.domain.entities.Ticket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface TicketService {
@@ -14,4 +15,6 @@ public interface TicketService {
     Page<Ticket> listTicketsForCustomer(UUID creatorId, Pageable pageable);
 
     Ticket updateTicketForCustomer(UUID creatorId, UUID ticketId, UpdateTicketRequest ticket);
+
+    Optional<Ticket> getTicketForCustomer(UUID creatorId, UUID ticketId);
 }
