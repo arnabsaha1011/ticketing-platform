@@ -19,6 +19,7 @@ public class Comment {
 
     @Id
     @Column(name = "id", nullable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "comment", nullable = false)
