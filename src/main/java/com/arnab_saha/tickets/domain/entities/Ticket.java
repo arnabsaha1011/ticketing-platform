@@ -32,7 +32,7 @@ public class Ticket {
     @JoinColumn(name = "creator_id")
     private User creator;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)

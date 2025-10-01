@@ -5,6 +5,7 @@ import com.arnab_saha.tickets.domain.UpdateTicketRequest;
 import com.arnab_saha.tickets.domain.entities.Ticket;
 import com.arnab_saha.tickets.domain.entities.TicketStatusEnum;
 import com.arnab_saha.tickets.domain.entities.User;
+import com.arnab_saha.tickets.domain.entities.UserRole;
 import com.arnab_saha.tickets.exceptions.TicketException;
 import com.arnab_saha.tickets.exceptions.TicketUpdateException;
 import com.arnab_saha.tickets.repositories.TicketRepository;

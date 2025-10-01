@@ -22,12 +22,16 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "comment", nullable = false)
+    @Column(name = "comment", nullable = false, columnDefinition = "TEXT")
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_id")
     private Ticket ticket;
+
+    @JoinColumn(name = "commenter_id", nullable = false, updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User commenter;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)

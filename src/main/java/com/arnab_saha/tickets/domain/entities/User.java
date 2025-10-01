@@ -29,6 +29,10 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "role", nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @ManyToMany
     @JoinTable(
             name = "user_creating_tickets",

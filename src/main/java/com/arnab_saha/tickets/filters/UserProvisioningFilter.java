@@ -1,6 +1,7 @@
 package com.arnab_saha.tickets.filters;
 
 import com.arnab_saha.tickets.domain.entities.User;
+import com.arnab_saha.tickets.domain.entities.UserRole;
 import com.arnab_saha.tickets.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,6 +16,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.UUID;
+
+import static com.arnab_saha.tickets.utils.JwtUtils.parseUserRole;
 
 @Component
 @RequiredArgsConstructor
@@ -32,12 +35,13 @@ public class UserProvisioningFilter extends OncePerRequestFilter {
                 && authentication.isAuthenticated()
                 && authentication.getPrincipal() instanceof Jwt jwt) {
             UUID keycloakId = UUID.fromString(jwt.getSubject());
-
+            UserRole role = parseUserRole(jwt);
             if (!userRepository.existsById(keycloakId)) {
                 User user = User.builder()
                         .id(keycloakId)
                         .name(jwt.getClaimAsString("preferred_username"))
                         .email(jwt.getClaimAsString("email"))
+                        .role(role)
                         .build();
                 userRepository.save(user);
             }
